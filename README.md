@@ -1,92 +1,175 @@
-# xApp for Throughput Prediction
+# xApp for Monitoring
 
+## Contact
 
+For help and information regarding this project, please contact: Dimitrios.Kefalas@lip6.fr
 
-## Getting started
+## Overview
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+In this project, you will deploy a fully operational 5G network using OpenAirInterface (OAI) and Kubernetes. The network functions will be containerized and orchestrated within a Kubernetes-based microservices environment, ensuring flexibility and scalability.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+The main objective is to utilize the Key Performance Measurement (KPM) service model within FlexRIC to collect real-time Downlink (DL) throughput data from the Radio Access Network (RAN). You will develop and deploy an xApp that processes this data, extracts predictive features, and integrates a machine learning-based model to forecast future DL throughput based on historical patterns, enabling proactive network optimization.
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Objective
+- Utilize the KPM service model within FlexRIC to monitor and observe different KPM metrics.
+- Execute multiple experiments and create a dataset with the corresponding metrics.
 
+---
+
+## Tools & Software
+- Kubernetes
+- OpenAirInterface5G CN and RAN
+- FlexRIC (cloud-based)
+
+---
+This repo uses a subpart of this implementation, please refer in case you need more details:
+```bash
+https://gitlab.noc.onelab.eu/onelab/slices-5g-blueprint/-/blob/main/5G_deployment_revised.md
 ```
-cd existing_repo
-git remote add origin https://gitlab.noc.onelab.eu/dkefalas/xapp-for-throughput-prediction.git
-git branch -M main
-git push -uf origin main
+---
+
+## Getting Started
+
+### Step 1: Clone the Repository
+Clone the repository to your VMs.
+```bash
+git clone https://gitlab.noc.onelab.eu/dkefalas/xapp-monitoring.git
+```
+---
+
+### Step 2: Verify Your Kubernetes Environment
+Check if you already have a healthy Kubernetes environment:
+
+- If your Kubernetes setup is functional, proceed to the Ansible installation section.
+- If you do not have a healthy Kubernetes environment, move to the next step.
+
+---
+
+### Step 3: Setting Up Kubernetes
+Navigate to the `kubernetes-setup` folder in the repository.
+
+This folder contains Ansible playbooks for:
+- Uninstalling any existing Kubernetes setup.
+- Installing a fresh Kubernetes environment.
+- Setting up a cluster, including:
+  - The control plane node.
+  - Worker nodes that will join the cluster.
+
+Follow the instructions in the `kubernetes-setup` folder to set up your Kubernetes environment.
+
+---
+
+### Step 4: Proceed to Ansible Installation
+Once your Kubernetes environment is set up, you can proceed with the installation using the provided Ansible playbooks.
+
+Begin by updating the inventories/UTH/hosts.yml file with the correct IPs and node names corresponding to your VMs.
+
+Next, modify the inventories/UTH/group_vars/all file to include the appropriate ansible_user value.
+
+After completing these steps, you can proceed with deploying the scenario by executing the following command:
+```bash
+ansible-playbook -i inventories/UTH 5g.yaml --extra-vars "@params.oai-flexric.yaml"
+```
+If everything has been set up correctly, all the following pods should be deployed:
+```bash
+kubectl get pods -n blueprint
+NAME                              READY   STATUS    RESTARTS   AGE
+oai-amf-6486c9d49c-snnt5          1/1     Running   0          45m
+oai-ausf-84ffb6bc7c-vjzdj         1/1     Running   0          45m
+oai-core-mysql-7f7b695b8b-s4l66   1/1     Running   0          45m
+oai-flexric-5db68d7bf6-n28q8      1/1     Running   0          44m
+oai-gnb-c5b4659c6-vghc7           1/1     Running   0          44m
+oai-nr-ue-7dbdb954fc-4rbn4        1/1     Running   0          44m
+oai-nrf-7dbb6d4b9-s9l2v           1/1     Running   0          45m
+oai-smf-5d654698cf-7wpnh          1/1     Running   0          45m
+oai-udm-7c49dc8f66-wsrtf          1/1     Running   0          45m
+oai-udr-5d85996695-zg5g4          1/1     Running   0          45m
+oai-upf-86dc5998c8-spzxz          1/1     Running   0          45m
 ```
 
-## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.noc.onelab.eu/dkefalas/xapp-for-throughput-prediction/-/settings/integrations)
 
-## Collaborate with your team
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+At this point, you should be able to ping from your UE to the 5GCN. To do this, execute a command to ping the 5GCN from your UE. 
+```bash
+kubectl exec -ti oai-nr-ue-7dbdb954fc-4rbn4 -n blueprint -- ping 12.1.1.1
+```
 
-## Test and Deploy
 
-Use the built-in continuous integration in GitLab.
+**Note**: The pod name in the command above is an example and will likely differ in your setup. Use `kubectl get pods` to find the correct pod name.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+---
 
-***
+## Deploying a Monitoring xApp
 
-# Editing this README
+The next step is to create and deploy a monitoring xApp. To deploy your xApp, run the following commands on the deployment host (master):
+```bash
+kubectl exec -ti oai-flexric-5db68d7bf6-n28q8 bash -n blueprint
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+This will connect you to the RIC environment, where you can choose the programming language for your xApp (C or Python3):
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- For **C language**: Navigate to `/flexric/build/examples/xApp/c`
+- For **Python3**: Navigate to `/flexric/build/examples/xApp/python3`
 
-## Name
-Choose a self-explaining name for your project.
+**Example**: To run an xApp that monitors KPM metrics for the RAN, use the following command:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+./xapp_kpm_moni
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Configuration Files and Directories
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You can view or edit configuration files for the Core, RAN, FlexRIC, and UE in the following directories:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- **Core Files**:  
+  `roles/flexric/files/blueprint/oai-flexric/core_files`
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+- **Core Configurations**:  
+  `roles/flexric/files/blueprint/oai-flexric/core_values`
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- **RAN Files**:  
+  `roles/flexric/files/blueprint/oai-flexric/ran_files`
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- **RAN Configurations**:  
+  `roles/flexric/files/blueprint/oai-flexric/ran_values`
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+- **FlexRIC Files**:  
+  `roles/flexric/files/blueprint/oai-flexric/flexric_files`
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- **FlexRIC Configurations**:  
+  `roles/flexric/files/blueprint/oai-flexric/flexric_values`
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- **UE Files**:  
+  `roles/flexric/files/blueprint/oai-flexric/ue_files`
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- **UE Configurations**:  
+  `roles/flexric/files/blueprint/oai-flexric/ue_values`
 
-## License
-For open source projects, say how it is licensed.
+---
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Uninstalling the Previous Deployment
+
+To uninstall the previous deployment (OAI Core, RF Simulator, FlexRIC, and UE), run the following Ansible playbook:
+
+```bash
+ansible-playbook -i inventories/UTH destroy-oai-flexric.yaml
+```
+
+This playbook will cleanly remove all components of the blueprint deployment.
+
+---
+
+## Project Goals
+The primary goal of this project is to develop and deploy an xApp that:
+- Leverages the KPM service model within FlexRIC.
+- Monitors and observes various performance metrics in a cloud-based 5G environment.
+- Collects data through experiments and creates a dataset for further analysis.
+
+This project uses:
+- Kubernetes for orchestration.
+- OpenAirInterface5G for Core Network (CN) and Radio Access Network (RAN).
+- FlexRIC for RIC-based monitoring and control.
+
