@@ -13,8 +13,15 @@ The main objective is to utilize the Key Performance Measurement (KPM) service m
 ---
 
 ## Objective
-- Utilize the KPM service model within FlexRIC to monitor and observe different KPM metrics.
-- Execute multiple experiments and create a dataset with the corresponding metrics.
+- Deploy a 5G Network: Set up a fully operational 5G network using OpenAirInterface (OAI) and Kubernetes, with the network functions running as containerized microservices.
+
+- Utilize the KPM Service Model: Leverage the Key Performance Measurement (KPM) service model in FlexRIC to collect real-time Downlink (DL) throughput data from the Radio Access Network (RAN).
+
+- Develop an xApp: Create and deploy an xApp capable of processing the provided DL throughput data and extracting predictive features.
+
+- Integrate Machine Learning: Implement a machine learning-based time-series model (e.g., LSTM, ARIMA) to forecast future DL throughput based on historical patterns.
+
+- Utilize Provided Dataset: Work exclusively with the provided dataset.csv for training and testing the machine learning model, ensuring consistent and standardized evaluation.
 
 ---
 
@@ -35,7 +42,7 @@ https://gitlab.noc.onelab.eu/onelab/slices-5g-blueprint/-/blob/main/5G_deploymen
 ### Step 1: Clone the Repository
 Clone the repository to your VMs.
 ```bash
-git clone https://gitlab.noc.onelab.eu/dkefalas/xapp-monitoring.git
+git clone https://gitlab.noc.onelab.eu/dkefalas/xapp-for-throughput-prediction.git
 ```
 ---
 
