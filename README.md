@@ -1,4 +1,4 @@
-# xApp for Monitoring
+# xApp for Throughput Prediction
 
 ## Contact
 
@@ -163,10 +163,13 @@ This playbook will cleanly remove all components of the blueprint deployment.
 ---
 
 ## Project Goals
-The primary goal of this project is to develop and deploy an xApp that:
-- Leverages the KPM service model within FlexRIC.
-- Monitors and observes various performance metrics in a cloud-based 5G environment.
-- Collects data through experiments and creates a dataset for further analysis.
+The primary goal of this project is to develop and deploy an xApp within a 5G network environment that leverages the Key Performance Measurement (KPM) service model in FlexRIC to collect and analyze real-time Downlink (DL) throughput data from the Radio Access Network (RAN). The xApp will integrate a machine learning-based model to forecast future DL throughput based on historical patterns, enabling proactive network optimization and improved performance management.
+
+You can use the file named dataset.csv for both training and testing purposes. The dataset should be split into two subsets: one for training the machine learning model and another for testing its performance. A common approach is to allocate 70-80% of the data for training and 20-30% for testing, ensuring the model is trained effectively while reserving sufficient data for evaluation.
+
+In order to test it you can deploy a script to generate traffic from the upf to the ue using the iperf command.
+
+You can retain this xApp and direct its output to a Python script, where you can leverage a pre-trained time-series predictive ML model, such as LSTM, ARIMA, or any other model of your choice.
 
 This project uses:
 - Kubernetes for orchestration.
