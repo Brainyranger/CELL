@@ -170,13 +170,11 @@ This playbook will cleanly remove all components of the blueprint deployment.
 ---
 
 ## Project Goals
-The primary goal of this project is to develop and deploy an xApp within a 5G network environment that leverages the Key Performance Measurement (KPM) service model in FlexRIC to collect and analyze real-time Downlink (DL) throughput data from the Radio Access Network (RAN). The xApp will integrate a machine learning-based model to forecast future DL throughput based on historical patterns, enabling proactive network optimization and improved performance management.
+The primary goal of this project is to develop and deploy an xApp within a 5G network environment that leverages the Key Performance Measurement (KPM) service model in FlexRIC to collect and analyze real-time Downlink (DL) throughput data from the Radio Access Network (RAN). The main objective is to evaluate and compare the inference time performance of multiple time-series machine learning predictors, such as LSTM, ARIMA, and other forecasting models, when applied to real-time DL throughput data.
 
-You can use the file named dataset.csv for both training and testing purposes. The dataset should be split into two subsets: one for training the machine learning model and another for testing its performance. A common approach is to allocate 70-80% of the data for training and 20-30% for testing, ensuring the model is trained effectively while reserving sufficient data for evaluation.
+You can use the file named dataset.csv for both training and testing purposes. The dataset should be split into two subsets: one for training the machine learning models and another for testing their performance. A common approach is to allocate 70–80% of the data for training and 20–30% for testing, ensuring that the models are trained effectively while reserving sufficient data for evaluation.
 
-In order to test it you can deploy a script to generate traffic from the upf to the ue using the iperf command.
-
-You can retain this xApp and direct its output to a Python script, where you can leverage a pre-trained time-series predictive ML model, such as LSTM, ARIMA, or any other model of your choice.
+To test the system, you can deploy a script to generate traffic from the UPF to the UE using the iperf command. The xApp can then direct its output to a Python script, where each pre-trained time-series model (e.g., LSTM, ARIMA, etc.) will be executed to measure its inference time and predictive efficiency under real network conditions.
 
 This project uses:
 - Kubernetes for orchestration.
