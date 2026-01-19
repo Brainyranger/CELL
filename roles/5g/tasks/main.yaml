@@ -15,10 +15,12 @@
     #update_cache: yes
     #become: yes
 
-- name: Install Kubernetes module via pip
-  ansible.builtin.pip:
-    name: kubernetes
+- name: Ensure python3-kubernetes is installed via apt
+  ansible.builtin.apt:
+    name: python3-kubernetes
     state: present
+    update_cache: yes
+  become: yes
 
 - name: Check if Helm is installed
   ansible.builtin.command:
@@ -78,8 +80,8 @@
     api_version: v1
     kind: Namespace
     state: present
-    kubeconfig: /etc/kubernetes/admin.conf
-  become: yes
+    kubeconfig: /home/david/.kube/config
+
 
 # The tasks for setting up the 5G core, FlexRIC, RAN, and UEs
 - name: Setup 5G core
@@ -89,7 +91,7 @@
 - name: Fetch status of core pods
   kubernetes.core.k8s_info:
     kind: Pod
-    kubeconfig: /etc/kubernetes/admin.conf
+    kubeconfig: /home/david/.kube/config
     namespace: '{{ GCN.namespace }}'
     label_selectors:
       - "app.kubernetes.io/instance=oai-core"  # Adjust this to match your pods' labeling

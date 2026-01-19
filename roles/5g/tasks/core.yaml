@@ -17,6 +17,11 @@
     chdir: bp-flexric/oai-5g-core/oai-5g-basic
 
 - name: Deploy 5G core
-  ansible.builtin.shell: 'helm install oai-core --namespace {{ GCN.namespace }} . --kubeconfig /etc/kubernetes/admin.conf'
+  ansible.builtin.shell: >
+    helm upgrade --install oai-core
+    --namespace {{ GCN.namespace }}
+    .
+    --kubeconfig /etc/kubernetes/admin.conf
   args:
     chdir: bp-flexric/oai-5g-core/oai-5g-basic
+

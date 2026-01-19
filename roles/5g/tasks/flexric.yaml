@@ -15,7 +15,8 @@
   kubernetes.core.helm:
     name: oai-flexric
     chart_ref: ./bp-flexric/oai-flexric
-    kubeconfig: /etc/kubernetes/admin.conf
+    kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
     release_namespace: '{{ GCN.namespace }}'
     wait: true
+
 

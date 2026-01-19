@@ -1,0 +1,60 @@
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+mkdir -p $HOME/.kube
+sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
+sudo apt update
+sudo apt install python3-kubernetes -y
+
+
+sudo chmod 644 /etc/kubernetes/admin.conf
+
+
+
+host.yml : 
+all:
+  children:
+    masters:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_user: david
+
+fichiers roles/5g/tasks
+
+main.yml : 
+- name: Ensure python3-kubernetes is installed via apt
+  ansible.builtin.apt:
+    name: python3-kubernetes
+    state: present
+    update_cache: yes
+  become: yes
+    state: present
+  check_mode: no
+  ignore_errors: yes
+
+
+core.yml : 
+- name: Deploy 5G core
+  ansible.builtin.shell: >
+    helm upgrade --install oai-core
+    --namespace {{ GCN.namespace }}
+    .
+    --kubeconfig /etc/kubernetes/admin.conf
+  args:
+    chdir: bp-flexric/oai-5g-core/oai-5g-basic
+
+
+
+ansible-playbook -i inventories/UTH/hosts.yml 5g.yaml --extra-vars "@params.oai-flexric.yaml" --ask-become-pass
+
+
+
+kubectl exec -ti <oai-flexric-5db68d7bf6-n28q8> -n blueprint bash
+
+cd /flexric/build/examples/xApp/c -> ./xapp_kpm_moni
+
+cd /flexric/build/examples/xApp/python3 -> python3 monitor-store-xapp.py

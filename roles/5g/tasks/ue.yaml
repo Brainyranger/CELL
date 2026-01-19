@@ -16,6 +16,6 @@
   kubernetes.core.helm:
     name: oai-nr-ue
     chart_ref: ./bp-flexric/oai-nr-ue
-    kubeconfig: /etc/kubernetes/admin.conf
+    kubeconfig: /home/david/.kube/config
     release_namespace: '{{ GCN.namespace }}'
     wait: true
