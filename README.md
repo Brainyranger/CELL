@@ -39,10 +39,10 @@ ansible-playbook -i inventories/UTH 5g.yaml --extra-vars "@params.oai-flexric.ya
 # Verify the deployment
 kubectl get pods -n blueprint -o wide
     
-  Pod Name,IP,Function
-  oai-flexric,10.244.0.28,Near-RT RIC
-  oai-gnb,10.244.0.29,5G Base Station
-  oai-nr-ue,10.244.0.30,User Equipment
+ Pod Name,IP,Function
+oai-flexric,10.244.0.28,Near-RT RIC (Controller)
+oai-gnb,10.244.0.29,5G Base Station (E2 Node)
+oai-nr-ue,10.244.0.30,User Equipment (Emulated)
 
   
 
