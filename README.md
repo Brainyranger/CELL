@@ -280,10 +280,3 @@ ARIMA	Statistical	Classic time-series forecasting	Fast, but less adaptable to no
 LSTM	Deep Learning	Recurrent Neural Network (RNN)	Optimized for complex 5G traffic patterns.
 
 
-
-
-
-
-r Core Network (CN) and Radio Access Network (RAN).
-- FlexRIC for RIC-based monitoring and control.
-
